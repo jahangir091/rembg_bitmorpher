@@ -56,7 +56,11 @@ def read_item(item_id: int, q: Union[str, None] = None):
 async def rembg_remove(
     input_image: str = Body("", title='rembg input image'),
     model: str = Body("u2net", title='rembg model'),
-    return_mask: bool = Body(False, title='return mask')
+    return_mask: bool = Body(False, title='return mask'),
+    alpha_matting: bool = Body(False, title='alpha matting'),
+    alpha_matting_foreground_threshold: int = Body(240, title='alpha matting foreground threshold'),
+    alpha_matting_background_threshold: int = Body(10, title='alpha matting background threshold'),
+    alpha_matting_erode_size: int = Body(10, title='alpha matting erode size')
 ):
     utc_time = datetime.now(timezone.utc)
     start_time = time.time()
@@ -65,7 +69,11 @@ async def rembg_remove(
     image = rembg.remove(
         input_image,
         session=rembg.new_session(model),
-        only_mask=return_mask
+        only_mask=return_mask,
+        alpha_matting=alpha_matting,
+        alpha_matting_foreground_threshold=alpha_matting_foreground_threshold,
+        alpha_matting_background_threshold=alpha_matting_background_threshold,
+        alpha_matting_erode_size=alpha_matting_erode_size,
     )
 
     output_image = encode_pil_to_base64(image).decode("utf-8")
