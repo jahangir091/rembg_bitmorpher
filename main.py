@@ -1,0 +1,75 @@
+from typing import Union
+import time
+from PIL import Image
+from io import BytesIO
+import base64
+import io
+import piexif
+import piexif.helper
+
+from fastapi import FastAPI, Body
+import rembg
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI()
+origins = ["*"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+def decode_base64_to_image(img_string):
+    img = Image.open(BytesIO(base64.b64decode(img_string)))
+    return img
+
+
+def encode_pil_to_base64(image):
+    with io.BytesIO() as output_bytes:
+        if image.mode == "RGBA":
+            image = image.convert("RGB")
+        parameters = image.info.get('parameters', None)
+        exif_bytes = piexif.dump({
+            "Exif": {piexif.ExifIFD.UserComment: piexif.helper.UserComment.dump(parameters or "",
+                                                                                encoding="unicode")}
+        })
+        image.save(output_bytes, format="JPEG", exif=exif_bytes)
+        bytes_data = output_bytes.getvalue()
+    return base64.b64encode(bytes_data)
+
+
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+
+@app.get("/items/{item_id}")
+def read_item(item_id: int, q: Union[str, None] = None):
+    return {"item_id": item_id, "q": q}
+
+
+@app.post("/ai/rembg")
+async def rembg_remove(
+    input_image: str = Body("", title='rembg input image'),
+    model: str = Body("u2net", title='rembg model'),
+    return_mask: bool = Body(False, title='return mask')
+):
+
+    start_time = time.time()
+    input_image = decode_base64_to_image(input_image)
+
+    image = rembg.remove(
+        input_image,
+        session=rembg.new_session(model),
+        only_mask=return_mask
+    )
+
+    output_image = encode_pil_to_base64(image).decode("utf-8")
+
+    return {
+        "server_time": time.time()-start_time,
+        "image": output_image
+    }
