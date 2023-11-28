@@ -6,6 +6,7 @@ import base64
 import io
 import piexif
 import piexif.helper
+from datetime import datetime, timezone
 
 from fastapi import FastAPI, Body
 import rembg
@@ -57,7 +58,7 @@ async def rembg_remove(
     model: str = Body("u2net", title='rembg model'),
     return_mask: bool = Body(False, title='return mask')
 ):
-
+    utc_time = datetime.now(timezone.utc)
     start_time = time.time()
     input_image = decode_base64_to_image(input_image)
 
@@ -70,6 +71,7 @@ async def rembg_remove(
     output_image = encode_pil_to_base64(image).decode("utf-8")
 
     return {
+        "server_hit_time": str(utc_time),
         "server_time": time.time()-start_time,
         "image": output_image
     }
