@@ -20,5 +20,9 @@ pip install rembg
 pip install piexif
 pip install opencv-python
 pip install fastapi
-pip install "uvicorn[standard]"
-uvicorn main:app --host 0.0.0.0 --port 8001 --reload
+pip install "uvicorn[standard]" gunicorn
+
+
+
+#uvicorn main:app --host 0.0.0.0 --port 8001 --reload
+gunicorn main:app --workers "$1" --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:"$2"
