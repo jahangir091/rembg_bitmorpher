@@ -13,7 +13,6 @@ import logging.config
 from fastapi import FastAPI, Body
 import rembg
 from fastapi.middleware.cors import CORSMiddleware
-import datetime
 from time import gmtime, strftime
 
 
