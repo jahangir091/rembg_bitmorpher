@@ -13,6 +13,9 @@ import logging.config
 from fastapi import FastAPI, Body
 import rembg
 from fastapi.middleware.cors import CORSMiddleware
+import datetime
+from time import gmtime, strftime
+
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +71,7 @@ async def rembg_remove(
 ):
     utc_time = datetime.now(timezone.utc)
     start_time = time.time()
+    print("time now: {0} ".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
     input_image = decode_base64_to_image(input_image)
 
     image = rembg.remove(
