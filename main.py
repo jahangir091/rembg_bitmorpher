@@ -7,10 +7,14 @@ import io
 import piexif
 import piexif.helper
 from datetime import datetime, timezone
+import logging
+import logging.config
 
 from fastapi import FastAPI, Body
 import rembg
 from fastapi.middleware.cors import CORSMiddleware
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 origins = ["*"]
@@ -77,6 +81,8 @@ async def rembg_remove(
     )
 
     output_image = encode_pil_to_base64(image).decode("utf-8")
+
+    print("time taken: {0}".format(time.time()-start_time))
 
     return {
         "server_hit_time": str(utc_time),
