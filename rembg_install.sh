@@ -6,11 +6,12 @@
 
 
 add-apt-repository ppa:deadsnakes/ppa
-apt update
-apt upgrade
-apt install python3.10-venv
-apt install htop
-apt install git
+apt update -y
+apt upgrade -y
+apt install python3.10-venv -y
+apt install htop -y
+apt install git -y
+apt install python3-venv libgl1 libglib2.0-0 -y
 git clone https://github.com/jahangir091/rembgtest.git
 cd rembgtest
 python3.10 -m venv env_rembg
