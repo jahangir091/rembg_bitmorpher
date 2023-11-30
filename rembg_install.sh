@@ -6,7 +6,7 @@
 
 
 prepare_installation(){
-  add-apt-repository ppa:deadsnakes/ppa
+  add-apt-repository ppa:deadsnakes/ppa -y
   apt update -y
   apt upgrade -y
   apt install python3.10-venv -y
@@ -15,7 +15,8 @@ prepare_installation(){
   apt install nginx -y
   apt install python3-venv libgl1 libglib2.0-0 -y
   git clone https://github.com/jahangir091/rembgtest.git
-  cd rembgtest
+  cd
+  cd /home/rembgtest
   python3.10 -m venv env_rembg
   source env_rembg/bin/activate
   pip install -r requirements.txt
@@ -41,12 +42,14 @@ prepare_installation(){
 }
 
 start_rembg(){
-  cd rembgtest
+  cd
+  cd /home/rembgtest
   service rembg restart
 }
 
 update_rembg(){
-  cd rembgtest
+  cd
+  cd /home/rembgtest
   git fetch
   git reset --hard origin/main
 }
