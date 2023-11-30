@@ -20,10 +20,18 @@ prepare_installation(){
   source env_rembg/bin/activate
   pip install -r requirements.txt
 
-  cp rembg.service /etc/systemd/system/
-  service rembg start
+  mkdir /var/log/rembg
+  touch /var/log/rembg/access.log
+  touch /var/log/rembg/error.log
+  chmod 777 -R /var/log/rembg
 
-  cp rembg.cong /etc/nginx/sites-available/
+  cp rembg.service /etc/systemd/system/
+  systemctl daemon-reload
+  systemctl start rembg
+  systemctl enable rembg
+  systemctl restart rembg
+
+  cp rembg.conf /etc/nginx/sites-available/
   ln -s /etc/nginx/sites-available/rembg.conf /etc/nginx/sites-enabled/
   service nginx start
 }
