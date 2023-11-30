@@ -30,14 +30,20 @@ prepare_installation(){
 
 start_rembg(){
   cd rembgtest
+  service rembg restart
+}
+
+update_rembg(){
+  cd rembgtest
   git fetch
   git reset --hard origin/main
-  service rembg restart
 }
 
 
 install="install"
 start="start"
+update="update"
+
 
 if [ "$1" == "$start" ]
 then
@@ -46,8 +52,11 @@ elif [ "$1" == "$install" ]
 then
   prepare_installation
   start_rembg
+elif [ "$1" == "$update" ]
+then
+  update_rembg
 else
-  printf "\n\n expected flags 'install' or 'start' \n\n"
+  printf "\n\n expected flags 'install' or 'start' or 'update'\n\n"
 fi
 #uvicorn main:app --host 0.0.0.0 --port 8001 --reload
 #gunicorn main:app --workers "$1" --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:"$2"
