@@ -1,0 +1,6 @@
+rembg
+piexif
+opencv-python
+fastapi
+"uvicorn[standard]"
+gunicorn
