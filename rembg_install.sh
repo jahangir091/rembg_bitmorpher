@@ -39,17 +39,22 @@ prepare_installation(){
   cp rembg.conf /etc/nginx/sites-available/
   ln -s /etc/nginx/sites-available/rembg.conf /etc/nginx/sites-enabled/
   service nginx start
+  service rembg restart
+  service nginx restart
 }
 
 start_rembg(){
   cd
   cd /home/rembgtest
   service rembg restart
+  service nginx restart
 }
 
 update_rembg(){
   cd
-  cd /home/rembgtest
+  cd /home
+  git clone https://github.com/jahangir091/rembgtest.git
+  cd rembgtest
   git fetch
   git reset --hard origin/main
 }
