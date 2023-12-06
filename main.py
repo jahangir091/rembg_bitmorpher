@@ -62,13 +62,17 @@ models = [
 @app.post("/sdapi/ai/rembg")
 async def rembg_remove(
     input_image: str = Body("", title='rembg input image'),
-    model: int = Body(6, title='rembg model'),
-    return_mask: bool = Body(True, title='return mask'),
-    # alpha_mat: bool = Body(False, title='alpha matting'),
-    # alpha_mat_foreground_threshold: int = Body(240, title='alpha matting foreground threshold'),
-    # alpha_mat_background_threshold: int = Body(10, title='alpha matting background threshold'),
-    # alpha_mat_erode_size: int = Body(10, title='alpha matting erode size')
+    model: int = Body(6, title='rembg model, not required, default to 6'),
+    return_mask: bool = Body(True, title='return mask, not required, default True')
 ):
+    if not input_image:
+        return{
+            "success": False,
+            "message": "Input image not found",
+            "server_hit_time": '',
+            "server_process_time": '',
+            "output_image": ''
+        }
     utc_time = datetime.now(timezone.utc)
     start_time = time.time()
     print("time now: {0} ".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
@@ -89,6 +93,8 @@ async def rembg_remove(
     print("time taken: {0}".format(time.time()-start_time))
 
     return {
+        "success": True,
+        "message": "Returned output successfully",
         "server_hit_time": str(utc_time),
         "server_process_time": time.time()-start_time,
         "output_image": output_image
