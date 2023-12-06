@@ -48,39 +48,40 @@ def encode_pil_to_base64(image):
     return base64.b64encode(bytes_data)
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+models = [
+    "None",
+    "u2net",
+    "u2netp",
+    "u2net_human_seg",
+    "u2net_cloth_seg",
+    "silueta",
+    "isnet-general-use",
+    "isnet-anime",
+]
 
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
-
-@app.post("/ai/rembg")
+@app.post("/sdapi/ai/rembg")
 async def rembg_remove(
     input_image: str = Body("", title='rembg input image'),
-    model: str = Body("u2net", title='rembg model'),
-    return_mask: bool = Body(False, title='return mask'),
-    # alpha_matting: bool = Body(False, title='alpha matting'),
-    # alpha_matting_foreground_threshold: int = Body(240, title='alpha matting foreground threshold'),
-    # alpha_matting_background_threshold: int = Body(10, title='alpha matting background threshold'),
-    # alpha_matting_erode_size: int = Body(10, title='alpha matting erode size')
+    model: int = Body(6, title='rembg model'),
+    return_mask: bool = Body(True, title='return mask'),
+    # alpha_mat: bool = Body(False, title='alpha matting'),
+    # alpha_mat_foreground_threshold: int = Body(240, title='alpha matting foreground threshold'),
+    # alpha_mat_background_threshold: int = Body(10, title='alpha matting background threshold'),
+    # alpha_mat_erode_size: int = Body(10, title='alpha matting erode size')
 ):
     utc_time = datetime.now(timezone.utc)
     start_time = time.time()
     print("time now: {0} ".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
     input_image = decode_base64_to_image(input_image)
-
+    model = model if model else 6
     image = rembg.remove(
         input_image,
-        session=rembg.new_session(model),
-        only_mask=return_mask,
-        # alpha_matting=alpha_matting,
-        # alpha_matting_foreground_threshold=alpha_matting_foreground_threshold,
-        # alpha_matting_background_threshold=alpha_matting_background_threshold,
-        # alpha_matting_erode_size=alpha_matting_erode_size,
+        session=rembg.new_session(models[model]),
+        only_mask=return_mask if return_mask else True,
+        # alpha_matting=alpha_mat if alpha_mat else False,
+        # alpha_matting_foreground_threshold=alpha_mat_foreground_threshold if alpha_mat_foreground_threshold else 240,
+        # alpha_matting_background_threshold=alpha_mat_background_threshold if alpha_mat_background_threshold else 10,
+        # alpha_matting_erode_size=alpha_mat_erode_size if alpha_mat_erode_size else 10,
     )
 
     output_image = encode_pil_to_base64(image).decode("utf-8")
@@ -89,6 +90,6 @@ async def rembg_remove(
 
     return {
         "server_hit_time": str(utc_time),
-        "server_time": time.time()-start_time,
-        "image": output_image
+        "server_process_time": time.time()-start_time,
+        "output_image": output_image
     }
