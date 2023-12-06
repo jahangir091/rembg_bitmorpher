@@ -5,7 +5,7 @@ bind = "0.0.0.0:8000"
 
 # Worker Options
 # workers = cpu_count() + 1
-workers = 1
+workers = 2
 worker_class = 'uvicorn.workers.UvicornWorker'
 
 # Logging Options
