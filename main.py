@@ -63,7 +63,9 @@ models = [
 async def rembg_remove(
     input_image: str = Body("", title='rembg input image'),
     model: int = Body(6, title='rembg model, not required, default to 6'),
-    return_mask: bool = Body(True, title='return mask, not required, default True')
+    return_mask: bool = Body(True, title='return mask, not required, default True'),
+    post_process_mask: bool = Body(False, title='post process mask for a smooth boundary '
+                                                'by applying Morphological Operations, not required, default False')
 ):
     if not input_image:
         return{
@@ -82,6 +84,7 @@ async def rembg_remove(
         input_image,
         session=rembg.new_session(models[model]),
         only_mask=return_mask if return_mask else True,
+        post_process_mask=post_process_mask if post_process_mask else False
         # alpha_matting=alpha_mat if alpha_mat else False,
         # alpha_matting_foreground_threshold=alpha_mat_foreground_threshold if alpha_mat_foreground_threshold else 240,
         # alpha_matting_background_threshold=alpha_mat_background_threshold if alpha_mat_background_threshold else 10,
