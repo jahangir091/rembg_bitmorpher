@@ -4,3 +4,4 @@ opencv-python
 fastapi
 uvicorn[standard]
 gunicorn
+fastapi-analytics==1.2.1

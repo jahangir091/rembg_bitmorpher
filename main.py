@@ -8,12 +8,14 @@ import piexif
 import piexif.helper
 from datetime import datetime, timezone
 import logging
+import uvicorn
 import logging.config
 
 from fastapi import FastAPI, Body
 import rembg
 from fastapi.middleware.cors import CORSMiddleware
 from time import gmtime, strftime
+from api_analytics.fastapi import Analytics
 
 
 logger = logging.getLogger(__name__)
@@ -27,6 +29,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(Analytics, api_key="00e0893b-82af-440c-af58-5de94649a57c")
+# Check the link below for the fast api analytics
+# https://pypi.org/project/fastapi-analytics/
 
 
 def decode_base64_to_image(img_string):
@@ -102,3 +107,7 @@ async def rembg_remove(
         "server_process_time": time.time()-start_time,
         "output_image": output_image
     }
+
+
+if __name__ == '__main__':
+    uvicorn.run(app, host="0.0.0.0", port=8000)
