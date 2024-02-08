@@ -107,5 +107,14 @@ async def rembg_remove(
     }
 
 
+@app.get("/ai/api/v1/rembg-server-test")
+async def rembg_server_test():
+
+    return {
+        "success": True,
+        "message": "Server is OK."
+    }
+
+
 if __name__ == '__main__':
     uvicorn.run(app, host="0.0.0.0", port=8000)
