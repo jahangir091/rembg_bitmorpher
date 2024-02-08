@@ -20,12 +20,13 @@ prepare_installation(){
   git clone https://github.com/jahangir091/rembg_bitmorpher.git
   cd
   cd /home/rembg_bitmorpher
-  python3.10 -m venv env_rembg
-  source env_rembg/bin/activate
+  python3.10 -m venv .venv
+  source .venv/bin/activate
   pip install -r requirements.txt
 
   rm -rf /var/log/rembg
   mkdir /var/log/rembg
+  mkdir /run/rembg
   touch /var/log/rembg/access.log
   touch /var/log/rembg/error.log
   chmod 777 -R /var/log/rembg
@@ -57,7 +58,7 @@ start_rembg(){
 
 update_rembg(){
   cd
-  cd /home
+  cd /home/
   git clone https://github.com/jahangir091/rembg_bitmorpher.git
   cd rembg_bitmorpher
   git fetch

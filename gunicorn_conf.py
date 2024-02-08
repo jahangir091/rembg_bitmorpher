@@ -5,7 +5,7 @@ from multiprocessing import cpu_count
 dir_path = os.path.dirname(os.path.realpath(__name__))
 
 # Socket path
-bind = 'unix:{0}/gunicorn.sock'.format(dir_path)
+bind = 'unix:/run/rembg/gunicorn.sock'
 
 # Worker Options
 # workers = cpu_count() + 1
