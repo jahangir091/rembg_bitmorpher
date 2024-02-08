@@ -1,4 +1,3 @@
-from typing import Union
 import time
 from PIL import Image
 from io import BytesIO
@@ -7,7 +6,6 @@ import io
 import piexif
 import piexif.helper
 from datetime import datetime, timezone
-import logging
 import uvicorn
 import logging.config
 
@@ -64,7 +62,7 @@ models = [
     "isnet-anime",
 ]
 
-@app.post("/sdapi/ai/rembg")
+@app.post("/ai/api/v1/rembg")
 async def rembg_remove(
     input_image: str = Body("", title='rembg input image'),
     model: int = Body(6, title='rembg model, not required, default to 6'),
