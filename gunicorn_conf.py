@@ -1,7 +1,11 @@
-# gunicorn_conf.py
+import os
 from multiprocessing import cpu_count
 
-bind = "0.0.0.0:8000"
+# current directory path
+dir_path = os.path.dirname(os.path.realpath(__name__))
+
+# Socket path
+bind = 'unix:/run/rembg/gunicorn.sock'
 
 # Worker Options
 # workers = cpu_count() + 1

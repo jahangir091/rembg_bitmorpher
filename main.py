@@ -1,4 +1,3 @@
-from typing import Union
 import time
 from PIL import Image
 from io import BytesIO
@@ -7,7 +6,6 @@ import io
 import piexif
 import piexif.helper
 from datetime import datetime, timezone
-import logging
 import uvicorn
 import logging.config
 
@@ -15,7 +13,7 @@ from fastapi import FastAPI, Body
 import rembg
 from fastapi.middleware.cors import CORSMiddleware
 from time import gmtime, strftime
-from api_analytics.fastapi import Analytics
+# from api_analytics.fastapi import Analytics
 
 
 logger = logging.getLogger(__name__)
@@ -29,7 +27,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_middleware(Analytics, api_key="00e0893b-82af-440c-af58-5de94649a57c")
+# app.add_middleware(Analytics, api_key="00e0893b-82af-440c-af58-5de94649a57c")
 # Check the link below for the fast api analytics
 # https://pypi.org/project/fastapi-analytics/
 
@@ -64,7 +62,7 @@ models = [
     "isnet-anime",
 ]
 
-@app.post("/sdapi/ai/rembg")
+@app.post("/ai/api/v1/rembg")
 async def rembg_remove(
     input_image: str = Body("", title='rembg input image'),
     model: int = Body(6, title='rembg model, not required, default to 6'),
@@ -106,6 +104,15 @@ async def rembg_remove(
         "server_hit_time": str(utc_time),
         "server_process_time": time.time()-start_time,
         "output_image": output_image
+    }
+
+
+@app.get("/ai/api/v1/rembg-server-test")
+async def rembg_server_test():
+
+    return {
+        "success": True,
+        "message": "Server is OK."
     }
 
 

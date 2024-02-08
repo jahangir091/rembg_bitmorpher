@@ -10,23 +10,29 @@ prepare_installation(){
   apt update -y
   apt upgrade -y
   apt install python3.10-venv -y
-  apt install htop -y
+  apt install htop vim -y
   apt install git -y
+  apt purge nginx nginx-common
+  apt autoremove -y
   apt install nginx -y
   apt install python3-venv libgl1 libglib2.0-0 -y
-  git clone https://github.com/jahangir091/rembgtest.git
+  cd /home/
+  git clone https://github.com/jahangir091/rembg_bitmorpher.git
   cd
-  cd /home/rembgtest
-  python3.10 -m venv env_rembg
-  source env_rembg/bin/activate
+  cd /home/rembg_bitmorpher
+  python3.10 -m venv .venv
+  source .venv/bin/activate
   pip install -r requirements.txt
 
   rm -rf /var/log/rembg
   mkdir /var/log/rembg
+  mkdir /run/rembg
   touch /var/log/rembg/access.log
   touch /var/log/rembg/error.log
   chmod 777 -R /var/log/rembg
 
+  cd
+  cd /home/rembg_bitmorpher/installation
   rm -rf /etc/systemd/system/rembg.service
   cp rembg.service /etc/systemd/system/
   systemctl daemon-reload
@@ -36,8 +42,8 @@ prepare_installation(){
 
   rm -rf /etc/nginx/sites-available/rembg.conf
   rm -rf /etc/nginx/sites-enabled/rembg.conf
-  cp rembg.conf /etc/nginx/sites-available/
-  ln -s /etc/nginx/sites-available/rembg.conf /etc/nginx/sites-enabled/
+  cp rembg_ngix.conf /etc/nginx/sites-available/
+  ln -s /etc/nginx/sites-available/rembg_ngix.conf /etc/nginx/sites-enabled/
   service nginx start
   service rembg restart
   service nginx restart
@@ -45,16 +51,16 @@ prepare_installation(){
 
 start_rembg(){
   cd
-  cd /home/rembgtest
+  cd /home/rembg_bitmorpher
   service rembg restart
   service nginx restart
 }
 
 update_rembg(){
   cd
-  cd /home
-  git clone https://github.com/jahangir091/rembgtest.git
-  cd rembgtest
+  cd /home/
+  git clone https://github.com/jahangir091/rembg_bitmorpher.git
+  cd rembg_bitmorpher
   git fetch
   git reset --hard origin/main
 }
