@@ -36,7 +36,7 @@ prepare_installation(){
 
   rm -rf /etc/nginx/sites-available/rembg.conf
   rm -rf /etc/nginx/sites-enabled/rembg.conf
-  cp rembg.conf /etc/nginx/sites-available/
+  cp rembg_ngix.conf /etc/nginx/sites-available/
   ln -s /etc/nginx/sites-available/rembg.conf /etc/nginx/sites-enabled/
   service nginx start
   service rembg restart
