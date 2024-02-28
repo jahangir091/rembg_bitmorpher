@@ -105,7 +105,7 @@ async def remove_image_background(
     # output_image = encode_pil_to_base64(image).decode("utf-8")
     out_images_directory_name = '/rembg_images/'
     out_image_path = get_img_path(out_images_directory_name)
-    image[0].save(out_image_path)
+    image.save(out_image_path)
 
     print("time taken: {0}".format(time.time()-start_time))
 
