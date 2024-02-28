@@ -73,13 +73,13 @@ models = [
 
 @app.post("/ai/api/v1/remove_bg")
 async def remove_image_background(
-    input_image: str = Body("", title='rembg input image'),
+    image: str = Body("", title='rembg input image'),
     model: int = Body(6, title='rembg model, not required, default to 6'),
     return_mask: bool = Body(True, title='return mask, not required, default True'),
     post_process_mask: bool = Body(False, title='post process mask for a smooth boundary '
                                                 'by applying Morphological Operations, not required, default False')
 ):
-    if not input_image:
+    if not image:
         return{
             "success": False,
             "message": "Input image not found",
@@ -89,7 +89,7 @@ async def remove_image_background(
     utc_time = datetime.now(timezone.utc)
     start_time = time.time()
     print("time now: {0} ".format(strftime("%Y-%m-%d %H:%M:%S", gmtime())))
-    input_image = decode_base64_to_image(input_image)
+    input_image = decode_base64_to_image(image)
     model = model if model else 6
     image = rembg.remove(
         input_image,
