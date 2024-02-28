@@ -103,7 +103,8 @@ async def remove_image_background(
     )
 
     # output_image = encode_pil_to_base64(image).decode("utf-8")
-    out_image_path = get_img_path('/rembg/')
+    out_images_directory_name = '/rembg_images/'
+    out_image_path = get_img_path(out_images_directory_name)
     image[0].save(out_image_path)
 
     print("time taken: {0}".format(time.time()-start_time))
@@ -112,7 +113,7 @@ async def remove_image_background(
         "success": True,
         "message": "Returned output successfully",
         "server_process_time": time.time()-start_time,
-        "output_image": 'media/' + out_image_path.split('/')[-1]
+        "output_image": 'media' + out_images_directory_name + out_image_path.split('/')[-1]
     }
 
 
