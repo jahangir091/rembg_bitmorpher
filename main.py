@@ -113,7 +113,7 @@ async def remove_image_background(
         "success": True,
         "message": "Returned output successfully",
         "server_process_time": time.time()-start_time,
-        "output_image": '/media' + out_images_directory_name + out_image_path.split('/')[-1]
+        "output_image_url": '/media' + out_images_directory_name + out_image_path.split('/')[-1]
     }
 
 
