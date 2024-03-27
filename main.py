@@ -10,11 +10,12 @@ import uvicorn
 import logging.config
 import os, uuid
 
-from fastapi import FastAPI, Body
+from fastapi import FastAPI, Body, BackgroundTasks
 import rembg
 from fastapi.middleware.cors import CORSMiddleware
 from time import gmtime, strftime
 # from api_analytics.fastapi import Analytics
+from r2storage import r2_file_upload
 
 
 logger = logging.getLogger(__name__)
@@ -72,7 +73,8 @@ models = [
 ]
 
 @app.post("/ai/api/v1/remove_bg")
-def remove_image_background(
+def remove_image_background(background_tasks: BackgroundTasks,
+
     image: str = Body("", title='rembg input image'),
     model: int = Body(6, title='rembg model, not required, default to 6'),
     return_mask: bool = Body(True, title='return mask, not required, default True'),
@@ -106,6 +108,13 @@ def remove_image_background(
     out_images_directory_name = '/rembg_images/'
     out_image_path = get_img_path(out_images_directory_name)
     image.save(out_image_path)
+    st = time.time()
+    # background_task = BackgroundTasks()
+    background_tasks.add_task(r2_file_upload, out_image_path)
+    # r2_file_upload(out_image_path)
+    public_url = "https://pub-288c4f7ae2ab4568ae80826ea3575a6b.r2.dev"
+    r2_file_url = public_url + '/' + out_image_path.split('/')[-1]
+    print("time taken for r2: {0}".format(time.time()-st))
 
     print("time taken: {0}".format(time.time()-start_time))
 
@@ -113,7 +122,8 @@ def remove_image_background(
         "success": True,
         "message": "Returned output successfully",
         "server_process_time": time.time()-start_time,
-        "output_image_url": '/media' + out_images_directory_name + out_image_path.split('/')[-1]
+        # "output_image_url": '/media' + out_images_directory_name + out_image_path.split('/')[-1]
+        "output_image_url": r2_file_url
     }
 
 
