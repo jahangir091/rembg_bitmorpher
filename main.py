@@ -72,7 +72,7 @@ models = [
 ]
 
 @app.post("/ai/api/v1/remove_bg")
-async def remove_image_background(
+def remove_image_background(
     image: str = Body("", title='rembg input image'),
     model: int = Body(6, title='rembg model, not required, default to 6'),
     return_mask: bool = Body(True, title='return mask, not required, default True'),
