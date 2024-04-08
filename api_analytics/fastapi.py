@@ -8,6 +8,9 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from starlette.requests import Request
 from starlette.responses import Response
 from starlette.types import ASGIApp
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -78,7 +81,7 @@ class Analytics(BaseHTTPMiddleware):
         # If privacy_level is 2, client IP address is never sent to the server
         if self.config.privacy_level == 2:
             return None
-
+        logger.debug("Logger is printing log")
         if self.config.get_ip_address:
             return self.config.get_ip_address(request)
         return request.client.host
